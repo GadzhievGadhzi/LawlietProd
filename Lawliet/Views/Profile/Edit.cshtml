@@ -27,6 +27,14 @@
         })
 
         <br />
+        <label>Группа</label><br />
+            @Html.DropDownList("Group", new SelectListItem[] {
+            new SelectListItem { Text = "П20-53К", Value = "П20-53К" },
+            new SelectListItem { Text = "П20-54К", Value = "П20-54К" },
+            new SelectListItem { Text = "П20-55К", Value = "П20-55К" },
+        })
+
+        <br />
         <br />
         <button type="submit" class="btn btn-primary">Изменить</button>
         <br />

@@ -21,19 +21,19 @@ namespace Lawliet.Helpers {
 
                         var expression = (task.EndDate - DateTime.Now);
                         if (expression.TotalMinutes < 720 && expression.TotalMinutes > 660) {
-                            emailMessage.Text = $"Задание \"{task.Titile}\" закончится через 12 часов!";
+                            emailMessage.Text = $"Задание \"{task.Title}\" закончится через 12 часов!";
                             emailMessage.SendEmailMessage();
                             return;
                         }
 
                         if (expression.TotalMinutes < 360 && expression.TotalMinutes > 300) {
-                            emailMessage.Text = $"Задание \"{task.Titile}\" закончится через 6 часов!";
+                            emailMessage.Text = $"Задание \"{task.Title}\" закончится через 6 часов!";
                             emailMessage.SendEmailMessage();
                             return;
                         }
 
                         if (expression.TotalMinutes < 60 && expression.TotalMinutes > 0) {
-                            emailMessage.Text = $"Задание \"{task.Titile}\" закончится через 1 час!";
+                            emailMessage.Text = $"Задание \"{task.Title}\" закончится через 1 час!";
                             emailMessage.SendEmailMessage();
                             return;
                         }

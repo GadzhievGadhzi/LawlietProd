@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Lawliet.Data;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Task = System.Threading.Tasks.Task;
+using Newtonsoft.Json;
 
 namespace Lawliet.Controllers {
     public class AuthController : Controller {
@@ -56,6 +57,8 @@ namespace Lawliet.Controllers {
                         break;
                 }
             });
+
+            user.CompletedTask = JsonConvert.SerializeObject(new List<string>());
 
             /*user.Topics.Add(new LessonTopic {
                 Id = new Random().Next(10000, 100000).ToString(),

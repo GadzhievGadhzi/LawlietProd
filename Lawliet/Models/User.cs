@@ -9,6 +9,7 @@ namespace Lawliet.Models {
         public string? Email { get; set; }
         public string? PictureUrl { get; set; }
         public string? Group { get; set; }
+        public string? CompletedTask { get; set; }
         public List<LessonTopic> Topics { get; set; }
         public List<StudentTask> StudentTasks { get; set; }
 

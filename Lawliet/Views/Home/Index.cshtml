@@ -36,4 +36,70 @@
             </div>
         }
     </div>
+
+
+    @if (db.StudentTasks.Count() > 0) {
+        <center><h1 class="display-5 fw-bold">Задания от учителей</h1></center>
+    }
+
+    <br />
+    <div class="row">
+        @{
+            int i = 0;
+            foreach (var task in db.StudentTasks.Take(9)) {
+                i++;
+                <div class="col-md-4">
+                    <div class="card mb-4 box-shadow">
+                        <div class="card-header"></div>
+                        <div class="card-body">
+                            <h5 class="card-title">@task.Title</h5>
+                            <p class="card-text mb-1">Группа: @task.Group</p>
+                            <p class="card-text">Срок сдачи: @task.EndDate</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop@(i)">Смотреть</button>
+                                </div>
+                                <small class="text-muted">@task.StartDate.ToShortDateString()</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="staticBackdrop@(i)" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">@task.Title</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                            </div>
+                            <div class="modal-body">
+                                Описание: @task.Description
+                                <br />
+                                Группа: @task.Group
+                                <br />
+                                Срок сдачи: @task.EndDate
+                                <br />
+                                
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Понял</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
 </div>
+
+<style>
+    .card-header {
+        background-color: #0d6efd;
+        color: white;
+        height: 60px;
+    }
+
+    .card-body {
+        height: 190px;
+    }
+</style>

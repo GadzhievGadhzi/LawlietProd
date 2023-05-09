@@ -1,7 +1,13 @@
 ﻿@using Lawliet.Data;
+@using Microsoft.EntityFrameworkCore;
 @using Microsoft.Extensions.Caching.Memory;
 @using Lawliet.Services;
+@using Newtonsoft.Json;
 @model User;
+
+@{
+    var db = Context.RequestServices.GetService<UserDataContext>();
+}
 
 @{
     if (!Context.User.Identity.IsAuthenticated || Model == null) {
@@ -11,7 +17,6 @@
 
     var user = Model;
     var topics = user.Topics;
-
     var pictureUrl = @user.PictureUrl;
 }
 
@@ -35,14 +40,14 @@
                         @if(user.Status == "Teacher") {
                             <div class="d-flex justify-content-end text-center py-1">
                                 <div>
-                                    <a href="/topic/add/">
+                                    <a href="/task/addtask/">
                                         <button type="button" class="btn btn-primary" style="margin-top: -5px;">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard2-plus" viewBox="0 0 16 16">
                                                 <path d="M9.5 0a.5.5 0 0 1 .5.5.5.5 0 0 0 .5.5.5.5 0 0 1 .5.5V2a.5.5 0 0 1-.5.5h-5A.5.5 0 0 1 5 2v-.5a.5.5 0 0 1 .5-.5.5.5 0 0 0 .5-.5.5.5 0 0 1 .5-.5h3Z"></path>
                                                 <path d="M3 2.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 0 0-1h-.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1H12a.5.5 0 0 0 0 1h.5a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5v-12Z"></path>
                                                 <path d="M8.5 6.5a.5.5 0 0 0-1 0V8H6a.5.5 0 0 0 0 1h1.5v1.5a.5.5 0 0 0 1 0V9H10a.5.5 0 0 0 0-1H8.5V6.5Z"></path>
                                             </svg>
-                                            Кнопка
+                                            Добавить задание
                                         </button>
                                     </a>
                                 </div>
@@ -59,30 +64,59 @@
                             </div>
                         }
 
-                        <div class="row g-2">
+                        <br />
+                        <div class="row">
                             @{
-                                if (topics.Count() > 0) {
-                                    <div class="d-flex justify-content-between align-items-center mb-4">
-                                        <p class="lead fw-normal mb-0">Последние опубликованные темы</p>
-                                    </div>
-
-                                    foreach (var topic in topics.Take(4)) {
-                                        <div class="col-md-6">
-                                            <div class="card mb-6 box-shadow">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">@topic.ShortTitle</h5>
-                                                    <p class="card-text">@((topic.Description!.Length <= 70) ? string.Join("", topic.Description!.Take(70)) : string.Join("", topic.Description!.Take(70)) + "...")</p>
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <div class="btn-group">
-                                                            <a href="@topic.Url"><button type="button" class="btn btn-sm btn-outline-secondary">Читать</button></a>
-                                                            <a href="/Topic/Edit?id=@topic.Id"><button type="button" class="btn btn-sm btn-outline-secondary">Изменить</button></a>
-                                                        </div>
-                                                        <small class="text-muted">@topic.DateCreation.ToShortDateString()</small>
+                                int i = 0;
+                                foreach (var task in db.StudentTasks.Take(9)) {
+                                    i++;
+                                    <div class="col-md-6">
+                                        <div class="card mb-4 box-shadow">
+                                            <div class="card-header"></div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">@task.Title</h5>
+                                                <p class="card-text mb-1">Группа: @task.Group</p>
+                                                <p class="card-text">Срок сдачи: @task.EndDate</p>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="btn-group">
+                                                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop@(i)">Смотреть</button>
                                                     </div>
+                                                    <small class="text-muted">@task.StartDate.ToShortDateString()</small>
                                                 </div>
                                             </div>
                                         </div>
-                                    }
+                                    </div>
+
+                                    <div class="modal fade" id="staticBackdrop@(i)" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="staticBackdropLabel">@task.Title</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Описание: @task.Description
+                                                    <br />
+                                                    Группа: @task.Group
+                                                    <br />
+                                                    Срок сдачи: @task.EndDate
+                                                    <br />
+                                                </div>
+                                                <div class="modal-footer">
+                                                    @{
+                                                        var competedTask = JsonConvert.DeserializeObject<List<string>>(user.CompletedTask);
+                                                    }
+
+                                                    @if (!competedTask.Contains(task.Id)) {
+                                                        <a href="task/RemoveUser?taskId=@task.Id"><button type="button" class="btn btn-primary" data-bs-dismiss="modal">Завершить задание</button></a>
+                                                    } else {
+                                                        <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Задание завершено</button>
+                                                    }
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 }
                             }
                         </div>
@@ -103,4 +137,13 @@
             cursor: default;
             text-decoration: none;
         }
+</style>
+
+<style>
+    .card-header {
+        background-color: #0d6efd;
+        color: white;
+        height: 50px;
+    }
+
 </style>
