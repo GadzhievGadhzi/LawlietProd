@@ -68,7 +68,7 @@
                         <div class="row">
                             @{
                                 int i = 0;
-                                foreach (var task in db.StudentTasks.Take(9)) {
+                                foreach (var task in db.StudentTasks.Where(x => x.Group == user.Group).Take(9)) {
                                     i++;
                                     <div class="col-md-6">
                                         <div class="card mb-4 box-shadow">

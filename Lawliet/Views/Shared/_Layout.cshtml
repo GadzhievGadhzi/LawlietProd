@@ -29,6 +29,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contacts">Контакты</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Excel" asp-action="Index">Excel статистика</a>
+                        </li>
 
                         @if (Context.User.Identity.IsAuthenticated) {
                             <li class="nav-item">

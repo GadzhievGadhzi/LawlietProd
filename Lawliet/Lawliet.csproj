@@ -20,6 +20,8 @@
 
   <ItemGroup>
     <PackageReference Include="bootstrap" Version="5.3.0-alpha2" />
+    <PackageReference Include="ClosedXML" Version="0.101.0" />
+    <PackageReference Include="excellupload" Version="1.0.0" />
     <PackageReference Include="MailKit" Version="4.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="7.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">

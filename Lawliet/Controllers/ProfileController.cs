@@ -47,6 +47,10 @@ namespace Lawliet.Controllers
 
             var tasks = _context.StudentTasks.Where(x => x.AuthorId == HttpContext.Request.Cookies["id"]);
             var user = _context.Users.Where(x => x.Id == HttpContext.Request.Cookies["id"]).FirstOrDefault();
+            if(user == null) {
+                return RedirectToAction("Login", "Auth");
+            }
+
             user.StudentTasks = tasks.ToList();
             return View(user);
         }

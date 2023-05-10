@@ -1,0 +1,67 @@
+﻿@using Lawliet.Models
+@model List<StudentViewModel>
+
+@using (Html.BeginForm("Index", "Excel", FormMethod.Post, new { enctype = "multipart/form-data", id = "frm-excel" })) {
+    <div class="mb-3">
+        <label for="formFile" class="form-label">Загрузите Excel-файл:</label>
+        <input class="form-control" name="fileExcel" type="file" id="fileExcel">
+    </div>
+    <button type="submit" class="btn btn-outline-secondary">Secondary</button>
+}
+
+<br />
+
+@{
+    var students = Model;
+    if (students != null && students.Count() > 0) {
+        var groups = new List<string>();
+        students.ForEach(x => {
+            if (!groups.Contains(x.Group)) {
+                groups.Add(x.Group);
+            }
+        });
+
+        foreach (var group in groups) {
+            <center><h2>Группа: @group</h2></center>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">ФИО</th>
+                        <th scope="col">1 четверть</th>
+                        <th scope="col">2 четверть</th>
+                        <th scope="col">3 четверть</th>
+                        <th scope="col">4 четверть</th>
+                        <th scope="col">Среднее значение</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int i = 0;
+                    }
+                    @foreach (var student in students.Where(x => x.Group == group)) {
+                        i++;
+                        <tr>
+                            <th scope="row">@i</th>
+                            <td>@($"{student.LastName} {student.FirstName} {student.Patronomyc}")</td>
+                            @foreach (var rating in student.Ratings) {
+                                <td>@rating</td>
+                            }
+                            <td>@student.Ratings.Average()</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <p>Общее кол-во человек в группе: @students.Where(x => x.Group == group).Count()</p>
+            <br />
+            <br />
+        }
+    }
+}
+
+<style>
+    .btn {
+        width: 100%;
+    }
+</style>
