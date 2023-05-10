@@ -15,7 +15,7 @@ namespace Lawliet {
             builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
             builder.Services.AddTransient<CachingService>();
-            
+
             builder.Services.AddMemoryCache();
 
             builder.Services.AddDbContext<UserDataContext>(
@@ -34,6 +34,7 @@ namespace Lawliet {
 
             builder.Services.AddTransient<TimerHelper>();
 
+
             var app = builder.Build();
             if (!app.Environment.IsDevelopment()) {
                 app.UseExceptionHandler("/Home/Error");
@@ -47,7 +48,7 @@ namespace Lawliet {
             app.UseRouting();
             app.UseAuthorization();
 
-            //app.UseMiddleware<StatefulÌiddleware>();
+            app.UseMiddleware<StatefulÌiddleware>();
 
             app.MapControllerRoute(
                 name: "default",
